@@ -11,3 +11,23 @@ export function login(data) {
     data
   })
 }
+/**
+ * 获取用户信息
+ * @returns promise
+ */
+export function settUserInfoApi() {
+  return request({
+    url: '/sys/profile',
+    method: 'POST'
+  })
+}
+/**
+ * 根据 用户id获取详细信息
+ * @param {string} id 用户id
+ * @returns  promise
+ */
+export function setUserDatilApi(id) {
+  return request({
+    url: '/sys/user/' + id
+  })
+}
