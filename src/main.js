@@ -17,10 +17,10 @@ import '@/permission' // permission control
 // 引入自动一指令文件
 import * as directives from '@/directive'
 //假数据
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
-}
+// if (process.env.NODE_ENV === 'production') {
+//   const { mockXHR } = require('../mock')
+//   mockXHR()
+// }
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
