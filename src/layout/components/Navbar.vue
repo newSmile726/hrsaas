@@ -15,7 +15,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="$store.state.user.usrInfo.staffPhoto" class="user-avatar" />
+          <img :src="$store.state.user.usrInfo.staffPhoto" class="user-avatar"  v-imgError='imgBase'/>
           <span>{{ $store.state.user.usrInfo.username}}</span>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -36,8 +36,13 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-
+import imgBase from"@/assets/common/head.jpg"
 export default {
+  data () {
+    return {
+    imgBase :imgBase
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger

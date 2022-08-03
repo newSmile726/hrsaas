@@ -51,7 +51,7 @@ export default {
     return {
       isLoading: false,
       loginForm: {
-        mobile: '13800000004',
+        mobile: '13800000002',
         password: '123456'
       },
       loginFormRules: {

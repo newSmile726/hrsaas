@@ -14,7 +14,8 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-
+// 引入自动一指令文件
+import * as directives from '@/directive'
 //假数据
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
@@ -25,12 +26,15 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
-
+//循环注册自定义指令
+for (let key in directives) {
+  Vue.directive(key, directives[key])
+}
 Vue.config.productionTip = false
 
 new Vue({
   el: '#app',
   router,
   store,
-  render: (h) => h(App),
+  render: (h) => h(App)
 })
