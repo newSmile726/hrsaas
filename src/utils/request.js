@@ -14,7 +14,7 @@ function isTimeOut() {
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, //环境变量配置了访问基础路径
-  timeout: 3000
+  timeout: 5000
 }) // 创建一个axios的实例
 service.interceptors.request.use(async (config) => {
   // 登录之后的请求才需要请求头Authorization
