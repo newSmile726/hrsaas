@@ -1,5 +1,10 @@
 <template>
-  <el-dialog @close="onclose" title="新增部门" :visible="visible" width="50%">
+  <el-dialog
+    @close="onclose"
+    :title="dialogTitle"
+    :visible="visible"
+    width="50%"
+  >
     <el-form
       ref="form"
       label-width="100px"
@@ -47,24 +52,49 @@
   </el-dialog>
 </template>
 <script>
-import { getDeptsApi, getEmployeesListApi, AddDeptsApi } from '@/api'
+import {
+  getDeptsApi,
+  getEmployeesListApi,
+  AddDeptsApi,
+  getDeptByIdApi,
+  getEditDeptsApi
+} from '@/api'
 export default {
   name: '',
   data() {
     // 自定义部门名称校验规则
-    const checkName = (rule, value, callback) => {
+    const checkName = async (rule, value, callback) => {
       // console.log(this.currentNode)
-      const isRepat = this.currentNode.children?.some(
-        (item) => item.name === value
-      ) //返回一个布尔值 为true表示存在 false表示没有
-      isRepat ? callback(new Error('部门重复')) : callback()
+      if (this.formData.id) {
+        // 为true 表示编辑状态
+        const { depts } = await getDeptsApi()
+        const isRepatName = depts.filter(
+          (item) =>
+            item.pid === this.formData.pid && item.id !== this.formData.id
+        )
+        const isRepat = isRepatName.some((item) => item.name === value)
+        isRepat ? callback(new Error('部门重复')) : callback()
+      } else {
+        const isRepat = this.currentNode.children?.some(
+          (item) => item.name === value
+        ) //返回一个布尔值 为true表示存在 false表示没有
+        isRepat ? callback(new Error('部门重复')) : callback()
+      }
     }
     //自定义部门编码校验规则
     const checkCode = async (rule, value, callback) => {
       const { depts } = await getDeptsApi()
-      const isRepat = depts.some((item) => item.code === value)
-      //返回一个布尔值 为true表示存在 false表示没有
-      isRepat ? callback(new Error('部门编码重复')) : callback()
+      let isRepat
+      if (this.formData.id) {
+        isRepat = depts
+          .filter((item) => item.id !== this.formData.id)
+          .some((item) => item.code === value)
+        isRepat ? callback(new Error('部门编码重复')) : callback()
+      } else {
+        isRepat = depts.some((item) => item.code === value)
+        //返回一个布尔值 为true表示存在 false表示没有
+        isRepat ? callback(new Error('部门编码重复')) : callback()
+      }
     }
     return {
       formData: {
@@ -111,8 +141,12 @@ export default {
   created() {
     this.getEmployeesList()
   },
+  computed: {
+    dialogTitle() {
+      return this.formData.id ? '编辑部门' : '添加部门'
+    }
+  },
   mounted() {},
-  computed: {},
   methods: {
     //获取部门负责人列表
     async getEmployeesList() {
@@ -123,20 +157,40 @@ export default {
     //关闭弹层
     onclose() {
       this.$emit('update:visible', false)
+      this.$refs.form.resetFields()
+      this.formData = {
+        name: '', // 部门名称
+        code: '', // 部门编码
+        manager: '', // 部门管理者
+        introduce: '' // 部门介绍
+      }
     },
     //新增部门
     async oncave() {
       await this.$refs.form.validate()
-      this.formData.pid = this.currentNode.id
       try {
-        await AddDeptsApi(this.formData)
-        this.onclose()
-        this.$message.success('添加部门成功')
-        this.$emit('addSuscess')
-        console.log(this.formData)
+        if (this.formData.id) {
+          //编辑
+          await getEditDeptsApi(this.formData)
+          this.onclose()
+          this.$message.success('修改部门成功')
+          this.$emit('addSuscess')
+        } else {
+          //添加
+          this.formData.pid = this.currentNode.id
+          await AddDeptsApi(this.formData)
+          this.onclose()
+          this.$message.success('添加部门成功')
+          this.$emit('addSuscess')
+          // console.log(this.formData)
+        }
       } catch (error) {
-        this.$message.error('添加部门失败')
+        this.$message.error('操作部门失败')
       }
+    },
+    //编辑部门
+    async getDeptById(id) {
+      this.formData = await getDeptByIdApi(id)
     }
   }
 }

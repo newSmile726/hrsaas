@@ -15,12 +15,18 @@
               @add="addDeptShow"
               :treeNode="scope.data"
               @remove="getDepts"
+              @iedt="ShowEdit"
             ></treeTools>
           </template>
         </el-tree>
       </el-card>
       <!-- 新增弹层 -->
-      <AddDept @addSuscess='getDepts' :visible.sync="dialogVisible" :currentNode="currentNode"></AddDept>
+      <AddDept
+        ref="edits"
+        @addSuscess="getDepts"
+        :visible.sync="dialogVisible"
+        :currentNode="currentNode"
+      ></AddDept>
     </div>
   </div>
 </template>
@@ -64,6 +70,10 @@ export default {
     addDeptShow(val) {
       this.dialogVisible = true
       this.currentNode = val
+    },
+    ShowEdit(val) {
+      this.dialogVisible = true
+      this.$refs.edits.getDeptById(val.id)
     }
   }
 }
