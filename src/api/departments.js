@@ -16,6 +16,18 @@ export const getDeptsApi = () => {
 export const delDeptsApi = (id) => {
   return request({
     url: '/company/department/' + id,
-    method:'DELETE'
+    method: 'DELETE'
+  })
+}
+/**
+ * 新增部门
+ * @param {Object} body 新增的部门参数
+ * @returns  promise
+ */
+export const AddDeptsApi = (data) => {
+  return request({
+    url: '/company/department',
+    method: 'POST',
+    data
   })
 }

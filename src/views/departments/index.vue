@@ -4,7 +4,7 @@
       <el-card class="box-card">
         <!-- 头部 -->
         <treeTools
-          @add="dialogVisible = true"
+          @add="addDeptShow"
           :isRouled="true"
           :treeNode="compny"
         ></treeTools>
@@ -12,7 +12,7 @@
         <el-tree :data="treeData" :props="defaultProps" default-expand-all>
           <template v-slot="scope">
             <treeTools
-              @add="dialogVisible = true"
+              @add="addDeptShow"
               :treeNode="scope.data"
               @remove="getDepts"
             ></treeTools>
@@ -20,7 +20,7 @@
         </el-tree>
       </el-card>
       <!-- 新增弹层 -->
-      <AddDept :visible="dialogVisible"></AddDept>
+      <AddDept @addSuscess='getDepts' :visible.sync="dialogVisible" :currentNode="currentNode"></AddDept>
     </div>
   </div>
 </template>
@@ -47,7 +47,8 @@ export default {
         label: 'name'
       },
       compny: { name: '传智教育', manager: '负责人' },
-      dialogVisible: false
+      dialogVisible: false,
+      currentNode: {}
     }
   },
 
@@ -59,6 +60,10 @@ export default {
     async getDepts() {
       const res = await getDeptsApi()
       this.treeData = troneSlistToTree(res.depts, '') //父级id为 ''
+    },
+    addDeptShow(val) {
+      this.dialogVisible = true
+      this.currentNode = val
     }
   }
 }
