@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <el-card class="box-card">
+      <el-card v-loading="loading" class="box-card">
         <!-- 头部 -->
         <treeTools
           @add="addDeptShow"
@@ -54,7 +54,8 @@ export default {
       },
       compny: { name: '传智教育', manager: '负责人' },
       dialogVisible: false,
-      currentNode: {}
+      currentNode: {},
+      loading: false
     }
   },
 
@@ -64,8 +65,10 @@ export default {
 
   methods: {
     async getDepts() {
+      this.loading = true
       const res = await getDeptsApi()
       this.treeData = troneSlistToTree(res.depts, '') //父级id为 ''
+      this.loading = false
     },
     addDeptShow(val) {
       this.dialogVisible = true

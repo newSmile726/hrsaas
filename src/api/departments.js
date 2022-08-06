@@ -38,19 +38,19 @@ export const AddDeptsApi = (data) => {
  */
 export const getDeptByIdApi = (id) => {
   return request({
-    url: '/company/department/'+ id
+    url: '/company/department/' + id
   })
 }
 
 /**
  * 根据id修改部门信息
- * @
+ * @param {Object} data 部门信息
  * @returns  promise
  */
- export const getEditDeptsApi = (data) => {
+export const getEditDeptsApi = (data) => {
   return request({
-    url: '/company/department/'+ data.id,
-    method:'PUT',
+    url: '/company/department/' + data.id,
+    method: 'PUT',
     data
   })
 }
