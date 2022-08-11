@@ -12,6 +12,8 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import components from '@/components'
+
 import '@/icons' // icon
 import '@/permission' // permission control
 // 引入自动一指令文件
@@ -21,7 +23,7 @@ import * as directives from '@/directive'
 //   const { mockXHR } = require('../mock')
 //   mockXHR()
 // }
-
+Vue.use(components)
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
