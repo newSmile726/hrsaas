@@ -15,8 +15,12 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="$store.state.user.usrInfo.staffPhoto" class="user-avatar"  v-imgError='imgBase'/>
-          <span>{{ $store.state.user.usrInfo.username}}</span>
+          <img
+            :src="$store.state.user.usrInfo.staffPhoto"
+            class="user-avatar"
+            v-imgError="imgBase"
+          />
+          <span>{{ $store.state.user.usrInfo.username }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -36,11 +40,11 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import imgBase from"@/assets/common/head.jpg"
+import imgBase from '@/assets/common/zhuanqq.gif'
 export default {
-  data () {
+  data() {
     return {
-    imgBase :imgBase
+      imgBase: imgBase
     }
   },
   components: {

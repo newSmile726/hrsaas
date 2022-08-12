@@ -12,26 +12,29 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+//自定义指令引入
+import * as directives from '@/directive'
+//组件封装引入
 import components from '@/components'
+//封装过滤器引入
+import * as filters from '@/filters'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-// 引入自动一指令文件
-import * as directives from '@/directive'
-//假数据
-// if (process.env.NODE_ENV === 'production') {
-//   const { mockXHR } = require('../mock')
-//   mockXHR()
-// }
-Vue.use(components)
-// set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
-//循环注册自定义指令
+// 注册组件
+Vue.use(components)
+//统一注册过滤器
+for (let key in filters) {
+  Vue.filter(key, filters[key])
+}
+//统一循环注册自定义指令
 for (let key in directives) {
   Vue.directive(key, directives[key])
 }
+
 Vue.config.productionTip = false
 
 new Vue({
