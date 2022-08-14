@@ -41,3 +41,15 @@ export function addEmployee(data) {
     data
   })
 }
+/**
+ * 批量导入员工
+ * @param {*} data 员工数组
+ * @returns  promise
+ */
+export function importMapKeyPathApi(data) {
+  return request({
+    url: '/sys/user/batch',
+    method: 'POST',
+    data
+  })
+}
