@@ -35,6 +35,7 @@
                   padding: 10px;
                 "
                 alt=""
+                @click="isShowErcodeDailog(row.staffPhoto)"
               />
             </template>
           </el-table-column>
@@ -101,18 +102,24 @@
       @add-success="getEmployees"
       :Visible.sync="isShowAddEmployees"
     ></AddEmployees>
+    <!-- 头像二维码 -->
+    <el-dialog title="头像二维码" :visible.sync="isShowErcode">
+      <canvas id="canvas"></canvas>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getEmployeesApi, delEmployee } from '@/api'
 import employees from '@/constant/employees'
+import QRCode from 'qrcode'
 import AddEmployees from './components/add-Employees.vue'
 const { exportExcelMapPath, hireType } = employees
 export default {
   name: 'Employees',
   data() {
     return {
+      isShowErcode: false,
       loading: false,
       employees: [],
       total: 0,
@@ -181,6 +188,15 @@ export default {
         filename: 'excel-list', //非必填
         autoWidth: true, //非必填
         bookType: 'xlsx' //非必填
+      })
+    },
+    //显示二维码
+    isShowErcodeDailog(staffPhoto) {
+      if (!staffPhoto) return this.$message.error('该用户还未设置头像')
+      this.isShowErcode = true
+      this.$nextTick(() => {
+        const canvas = document.getElementById('canvas')
+        QRCode.toCanvas(canvas, staffPhoto)
       })
     }
   }
