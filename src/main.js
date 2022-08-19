@@ -18,7 +18,8 @@ import * as directives from '@/directive'
 import components from '@/components'
 //封装过滤器引入
 import * as filters from '@/filters'
-
+//打印
+import Print from 'vue-print-nb'
 import '@/icons' // icon
 import '@/permission' // permission control
 // Vue.use(ElementUI, { locale })
@@ -26,6 +27,8 @@ import '@/permission' // permission control
 Vue.use(ElementUI)
 // 注册组件
 Vue.use(components)
+//注册打印
+Vue.use(Print)
 //统一注册过滤器
 for (let key in filters) {
   Vue.filter(key, filters[key])

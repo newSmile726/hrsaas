@@ -27,7 +27,9 @@
           <el-tab-pane name="user" label="个人详情">
             <userInfo></userInfo>
           </el-tab-pane>
-          <el-tab-pane name="tob" label="岗位信息" />
+          <el-tab-pane name="tob" label="岗位信息">
+            <jobInfo></jobInfo>
+          </el-tab-pane>
         </el-tabs>
       </el-card>
     </div>
@@ -36,6 +38,7 @@
 <script>
 import { setUserDatilApi, saveUserDetailById } from '@/api'
 import userInfo from './components/user-info.vue'
+import jobInfo from './components/job-info.vue'
 import Cookies from 'js-cookie'
 export default {
   name: '',
@@ -46,7 +49,8 @@ export default {
     }
   },
   components: {
-    userInfo
+    userInfo,
+    jobInfo
   },
   created() {
     this.loadUserDatil()
