@@ -73,7 +73,9 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="AssignShow(row.id)"
+                >角色</el-button
+              >
               <el-button type="text" size="small" @click="onremove(row.id)"
                 >删除</el-button
               >
@@ -95,6 +97,8 @@
             @current-change="changePage"
           />
         </el-row>
+        <!-- 角色分配 -->
+        <AssignRole :EmployessId='EmployessId' :visible.sync="AssignVisible"></AssignRole>
       </el-card>
     </div>
     <!-- 新增弹层组件 -->
@@ -114,6 +118,7 @@ import { getEmployeesApi, delEmployee } from '@/api'
 import employees from '@/constant/employees'
 import QRCode from 'qrcode'
 import AddEmployees from './components/add-Employees.vue'
+import AssignRole from './components/assign-role.vue'
 const { exportExcelMapPath, hireType } = employees
 export default {
   name: 'Employees',
@@ -127,10 +132,12 @@ export default {
         page: 1,
         size: 5
       },
-      isShowAddEmployees: false
+      isShowAddEmployees: false,
+      AssignVisible: false, //分配角色
+      EmployessId: '' // 传给分配角色的id
     }
   },
-  components: { AddEmployees },
+  components: { AddEmployees, AssignRole },
   created() {
     this.getEmployees()
   },
@@ -198,6 +205,11 @@ export default {
         const canvas = document.getElementById('canvas')
         QRCode.toCanvas(canvas, staffPhoto)
       })
+    },
+    //显示分配角色
+    AssignShow(id) {
+      this.AssignVisible = true
+      this.EmployessId = id
     }
   }
 }

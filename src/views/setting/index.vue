@@ -13,8 +13,10 @@
             <el-table-column prop="description" label="描述"> </el-table-column>
             <el-table-column label="操作">
               <template>
-                <el-button size="small" type="primary">分配权限</el-button>
-                <el-button size="small" type="success">编辑</el-button>
+                <el-button size="small" type="success" @click="ShowRightsdialog"
+                  >分配权限</el-button
+                >
+                <el-button size="small" type="primary">编辑</el-button>
                 <el-button size="small" type="danger">删除</el-button>
               </template>
             </el-table-column>
@@ -90,12 +92,34 @@
         <el-button type="primary" @click="addRole">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 分配权限弹层 -->
+    <el-dialog title="分配权限" :visible.sync="Rightsdialog" width="50%">
+      <el-tree
+        show-checkbox
+        default-expand-all
+        node-key='id'
+        :data="Permission"
+        :props="{ label: 'name' }"
+        :default-checked-keys="defaultcheckedkeys"
+      ></el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="Rightsdialog = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRolesApi, AddRolesApi, getCompanyInfoApi } from '@/api'
+import {
+  getRolesApi,
+  AddRolesApi,
+  getCompanyInfoApi,
+  getPermissionList
+} from '@/api'
+import { troneSlistToTree } from '@/utils'
 export default {
+  name: 'settings',
   data() {
     return {
       activeName: 'first',
@@ -114,13 +138,17 @@ export default {
           { required: true, message: '请输入角色描述', trigger: 'blur' }
         ]
       },
-      formData: {}
+      formData: {},
+      Rightsdialog: false, //权限分配
+      Permission: [], //权限列表
+      defaultcheckedkeys: ['1'] // 权限默认勾选的节点的 key 的数组
     }
   },
 
   created() {
     this.getRoles()
     this.getCompanyInfo()
+    this.PermissionList() // 权限列表
   },
 
   methods: {
@@ -160,13 +188,23 @@ export default {
       const res = await getCompanyInfoApi(
         this.$store.state.user.usrInfo.companyId
       )
-      console.log(res)
+      // console.log(res)
       this.formData = {
         name: res.name,
         companyAddress: res.companyAddress,
         mailbox: res.mailbox,
         remarks: res.remarks
       }
+    },
+    //点击分配权限
+    ShowRightsdialog() {
+      this.Rightsdialog = true
+    },
+    //获取权限列表
+    async PermissionList() {
+      const res = await getPermissionList()
+      const treepmission = troneSlistToTree(res, '0')
+      this.Permission = treepmission
     }
   }
 }
