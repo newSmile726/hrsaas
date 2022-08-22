@@ -8,12 +8,17 @@
             size="small"
             type="warning"
             @click="$router.push('/import')"
+            v-if="isHas(point.permissions.import)"
             >导入</el-button
           >
           <el-button size="small" type="danger" @click="importExcel"
             >导出</el-button
           >
-          <el-button size="small" type="primary" @click="isShowAdd"
+          <el-button
+            size="small"
+            type="primary"
+            @click="isShowAdd"
+            v-if="isHas(point.permissions.add)"
             >新增员工</el-button
           >
         </template>
@@ -76,7 +81,11 @@
               <el-button type="text" size="small" @click="AssignShow(row.id)"
                 >角色</el-button
               >
-              <el-button type="text" size="small" @click="onremove(row.id)"
+              <el-button
+                type="text"
+                size="small"
+                @click="onremove(row.id)"
+                v-if="isHas(point.permissions.del)"
                 >删除</el-button
               >
             </template>
@@ -98,7 +107,10 @@
           />
         </el-row>
         <!-- 角色分配 -->
-        <AssignRole :EmployessId='EmployessId' :visible.sync="AssignVisible"></AssignRole>
+        <AssignRole
+          :EmployessId="EmployessId"
+          :visible.sync="AssignVisible"
+        ></AssignRole>
       </el-card>
     </div>
     <!-- 新增弹层组件 -->
@@ -119,9 +131,11 @@ import employees from '@/constant/employees'
 import QRCode from 'qrcode'
 import AddEmployees from './components/add-Employees.vue'
 import AssignRole from './components/assign-role.vue'
+import MixinsPermissions from '@/mixins/permissions'
 const { exportExcelMapPath, hireType } = employees
 export default {
   name: 'Employees',
+  mixins: [MixinsPermissions],
   data() {
     return {
       isShowErcode: false,

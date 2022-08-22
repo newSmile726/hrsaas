@@ -1,5 +1,6 @@
 import { login, settUserInfoApi, setUserDatilApi } from '@/api'
 import { setTokenTime } from '@/utils/auth'
+import { resetRouter } from '@/router'
 export default {
   namespaced: true,
   state: {
@@ -31,11 +32,15 @@ export default {
       // console.log(userInfoMessage)
       //合并数据
       context.commit('setUserInfo', { ...userInfoBase, ...userInfoMessage })
+      // return 出去用户基本信息 相当于 promise的点then
+      return userInfoBase
     },
     //退出登录
     logout(context) {
       context.commit('getToken', '')
       context.commit('setUserInfo', {})
+      resetRouter() // 重置路由规则
+      context.commit('permissions/setRouters', [], { root: true })
     }
   }
 }

@@ -3,7 +3,10 @@
     <div class="app-container">
       <el-tabs v-model="activeName">
         <el-tab-pane label="角色管理" name="first">
-          <el-button type="primary" @click="adddialogVisible = true"
+          <el-button
+            type="primary"
+            @click="adddialogVisible = true"
+            v-isHas="point.roles.add"
             >新增角色</el-button
           >
           <!-- 表格 -->
@@ -12,8 +15,12 @@
             <el-table-column prop="name" label="角色"> </el-table-column>
             <el-table-column prop="description" label="描述"> </el-table-column>
             <el-table-column label="操作">
-              <template>
-                <el-button size="small" type="success" @click="ShowRightsdialog"
+              <template slot-scope="{ row }">
+                <el-button
+                  size="small"
+                  type="success"
+                  v-isHas="point.roles.edit"
+                  @click="ShowRightsdialog(row.id)"
                   >分配权限</el-button
                 >
                 <el-button size="small" type="primary">编辑</el-button>
@@ -93,18 +100,25 @@
       </span>
     </el-dialog>
     <!-- 分配权限弹层 -->
-    <el-dialog title="分配权限" :visible.sync="Rightsdialog" width="50%">
+    <el-dialog
+      title="分配权限"
+      destroy-on-close
+      :visible.sync="Rightsdialog"
+      width="50%"
+      @close="RightRolues"
+    >
       <el-tree
         show-checkbox
         default-expand-all
-        node-key='id'
+        ref="perTree"
+        node-key="id"
         :data="Permission"
         :props="{ label: 'name' }"
         :default-checked-keys="defaultcheckedkeys"
       ></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="Rightsdialog = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="addRigths">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -115,11 +129,15 @@ import {
   getRolesApi,
   AddRolesApi,
   getCompanyInfoApi,
-  getPermissionList
+  getPermissionList,
+  getRolesInfo,
+  assignPerm
 } from '@/api'
 import { troneSlistToTree } from '@/utils'
+import MixinsPermissions from '@/mixins/permissions'
 export default {
   name: 'settings',
+  mixins: [MixinsPermissions],
   data() {
     return {
       activeName: 'first',
@@ -138,10 +156,12 @@ export default {
           { required: true, message: '请输入角色描述', trigger: 'blur' }
         ]
       },
+
       formData: {},
       Rightsdialog: false, //权限分配
       Permission: [], //权限列表
-      defaultcheckedkeys: ['1'] // 权限默认勾选的节点的 key 的数组
+      defaultcheckedkeys: [], // 权限默认勾选的节点的 key 的数组
+      RolesId: '' // 发送分配权限需要的角色id
     }
   },
 
@@ -196,15 +216,31 @@ export default {
         remarks: res.remarks
       }
     },
-    //点击分配权限
-    ShowRightsdialog() {
+    //点击分配权限并获取当前角色详情
+    async ShowRightsdialog(id) {
       this.Rightsdialog = true
+      const { permIds } = await getRolesInfo(id)
+      this.RolesId = id
+      this.defaultcheckedkeys = permIds
     },
     //获取权限列表
     async PermissionList() {
       const res = await getPermissionList()
       const treepmission = troneSlistToTree(res, '0')
       this.Permission = treepmission
+    },
+    //监听权限分配对话框关闭
+    RightRolues() {
+      this.defaultcheckedkeys = []
+    },
+    //确定分配权限
+    async addRigths() {
+      await assignPerm({
+        id: this.RolesId,
+        permIds: this.$refs.perTree.getCheckedKeys()
+      })
+      this.$message.success('分配成功')
+      this.Rightsdialog = false
     }
   }
 }

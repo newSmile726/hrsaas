@@ -1,3 +1,4 @@
+import store from '@/store'
 //自定义图片加载失败指令
 export const imgError = {
   inserted: (el, binding) => {
@@ -13,6 +14,15 @@ export const imgError = {
   update(el, binding) {
     if (!el.src) {
       el.src = binding.value
+    }
+  }
+}
+// 自定义按钮权限指令
+export const isHas = {
+  inserted(el, binding) {
+    const has = store.state.permissions.points.includes(binding.value)
+    if (!has) {
+      el.remove()
     }
   }
 }

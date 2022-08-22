@@ -7,7 +7,10 @@ router.beforeEach(async (to, from, next) => {
   if (token) {
     //有token 调用获取用户信息
     if (!store.state.user.usrInfo.userId) {
-      await store.dispatch('user/setUserInfo')
+      // 从vuex中actions中return出来的数据 做路由权限筛选
+      const { roles } = await store.dispatch('user/setUserInfo')
+      await store.dispatch('permissions/filterRouter', roles)
+      next(to.path)
     }
     // 1.登录
     if (to.path === '/login') {
