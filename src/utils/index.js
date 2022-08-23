@@ -115,3 +115,22 @@ export function param2Obj(url) {
   })
   return obj
 }
+/**
+ * 把数组数据转为树形数据
+ * @param {*} data 处理的数据
+ * @param {*} pid  父级id
+ * @returns  树形数据
+ */
+export function troneSlistToTree(data, pid) {
+  const arr = []
+  data.forEach(item => {
+      if (item.pid === pid) {
+          const children = troneSlistToTree(data, item.id)
+          if (children.length) {
+              item.children = children
+          }
+          arr.push(item)
+      }
+  })
+  return arr
+}
