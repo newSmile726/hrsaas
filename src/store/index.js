@@ -5,6 +5,7 @@ import app from './modules/app'
 import settings from './modules/settings'
 import user from './modules/user'
 import permissions from './modules/permissions'
+import tagsView from './modules/tagsView'
 import createVuexPersisted from 'vuex-persistedstate'
 Vue.use(Vuex)
 
@@ -13,14 +14,15 @@ const store = new Vuex.Store({
     app,
     settings,
     user,
-    permissions
+    permissions,
+    tagsView
   },
   getters,
-  plugins:[
+  plugins: [
     createVuexPersisted({
-      reducer(state){
-        return{
-          user:{
+      reducer(state) {
+        return {
+          user: {
             token: state.user.token
           }
         }

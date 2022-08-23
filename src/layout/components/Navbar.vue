@@ -13,6 +13,10 @@
     </div>
 
     <div class="right-menu">
+      <!-- 语言切换 -->
+      <ToggleLang></ToggleLang>
+      <!-- 全屏组件 -->
+      <FullScreen></FullScreen>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img
@@ -116,7 +120,7 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
-
+    display: flex;
     &:focus {
       outline: none;
     }

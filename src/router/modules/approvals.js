@@ -13,7 +13,7 @@ export default {
       component: () => import('@/views/approvals'),
       name: 'approvals',
       meta: {
-        title: '审批',
+        title: 'approvals',
         icon: 'tree-table',
       },
     },
